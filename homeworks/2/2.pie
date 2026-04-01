@@ -1,0 +1,208 @@
+#lang pie
+
+;; The purpose of this assignment is to get good at using the
+;; eliminators for Nat. For each problem, do the following:
+;; 0. Understand the problem. Find two additional examples above and
+;;    beyond the provided examples, and add them to the list in the
+;;    problem description comment.
+;; 1. Identify which eliminator to use. Write why you chose it in a
+;;    comment.
+;; 2. Identify the base and the step. If they are lambda-expressions,
+;;    then define them as their own definitions. If not, it's your
+;;    choice.
+;; 3. Define the function.
+;; 4. Test the function against each provided example as well as your
+;;    own examples by adding a check-same form.
+
+
+
+;; Problem 1
+;; (double n) evaluates to 2 times n.
+;; Examples: (double 5) ==> 10
+;;           (double 8) ==> 16
+(claim double
+  (-> Nat
+    Nat))
+
+#;(check-same Nat (double 5) 10)
+#;(check-same Nat (double 8) 16)
+
+;; Problem 2
+;; (+ n m) is the sum of n and m.
+;; Examples:
+;;  (+ 1 4) ==> 5
+;;  (+ 39 3) ==> 42
+
+(claim +
+  (-> Nat Nat
+    Nat))
+#;(check-same Nat (+ 1 4) 5)
+#;(check-same Nat (+ 39 3) 42)
+
+;; Problem 3
+;; (* n m) is the product of n and m
+;; Examples:
+;;  (* 2 3) ==> 6
+;;  (* 0 55) ==> 0
+;;  (* 55 0) ==> 0
+;;  (* 4 9) ==> 36
+(claim *
+  (-> Nat Nat
+    Nat))
+#;(check-same Nat (* 2 3) 6)
+#;(check-same Nat (* 0 55) 0)
+#;(check-same Nat (* 55 0) 0)
+#;(check-same Nat (* 4 9) 36)
+
+;; Problem 4
+;; (expt n m) is n raised to the mth power
+;; Examples:
+;;  (expt 3 2) ==> 9
+;;  (expt 5 5) ==> 3125
+(claim expt
+  (-> Nat Nat
+    Nat))
+#;(check-same Nat (expt 3 2) 9)
+#;(check-same Nat (expt 5 5) 3125)
+
+
+;; Problem 4
+;; (sub1 n) is one less than n if n has add1 at the top, or zero
+;; otherwise.
+;; Examples:
+;;  (sub1 5) ==> 4
+;;  (sub1 0) ==> 0
+;;  (sub1 1) ==> 0
+(claim sub1
+  (-> Nat
+    Nat))
+#;(check-same Nat (sub1 5) 4)
+#;(check-same Nat (sub1 0) 0)
+#;(check-same Nat (sub1 1) 0)
+
+;; Problem 5
+;; (max n m) evaluates to whichever of n or m is largest.
+;; Examples:
+;;  (max 3 5) ==> 5
+;;  (max 4 2) ==> 4
+;; Hint: base-max is an
+;; (-> Nat
+;;   Nat)
+
+(claim max
+  (-> Nat Nat
+    Nat))
+#;(check-same Nat (max 3 5) 5)
+#;(check-same Nat (max 4 2) 4)
+
+;; Problem 6
+;; (min n m) evaluates to whichever of n or m is smallest.
+;; Examples:
+;;  (min 4 9) ==> 4
+;;  (min 12 0) ==> 0
+(claim min
+  (-> Nat Nat
+    Nat))
+#;(check-same Nat (min 4 9) 4)
+#;(check-same Nat (min 12 0) 0)
+
+;; Problem 7
+;; (monus n m) is n minus m if n ≥ m, or 0 otherwise.
+;; Examples:
+;; (monus 2 3) ==> 0
+;; (monus 5 4) ==> 1
+;; (monus 23 2) ==> 21
+;; (monus 23 29) ==> 0
+(claim monus
+  (-> Nat Nat
+    Nat))
+#;(check-same Nat (monus 2 3) 0)
+#;(check-same Nat (monus 5 4) 1)
+#;(check-same Nat (monus 23 2) 21)
+#;(check-same Nat (monus 23 29) 0)
+
+;; Problem 8
+;; (! n) is n factorial; that is, the product of all numbers from 1 to n.
+;; If n is zero, (! n) is 1.
+;; Examples:
+;;  (! 0) ==> 1
+;;  (! 6) ==> 720
+
+(claim !
+  (-> Nat
+    Nat))
+#;(check-same Nat (! 0) 1)
+#;(check-same Nat (! 6) 720)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; Optional challenge problems
+;;; These problems are not mandatory and do not contribute to your grade,
+;;; but they are provided for those who want extra practice with primitive
+;;; recursion.
+
+;;; (fib n) is the nth Fibonacci number.
+;;; Examples:
+;;;  (fib 0) ==> 1
+;;;  (fib 1) ==> 1
+;;;  (fib 2) ==> 2
+;;;  (fib 3) ==> 3
+;;;  (fib 4) ==> 5
+;;;  (fib 5) ==> 8
+;;; Hint: remember the relationship between for loops and recursive
+;;; functions.
+
+(claim fib
+  (-> Nat
+    Nat))
+#;(check-same Nat (fib 0) 1)
+#;(check-same Nat (fib 1) 1)
+#;(check-same Nat (fib 2) 2)
+#;(check-same Nat (fib 3) 3)
+#;(check-same Nat (fib 4) 5)
+#;(check-same Nat (fib 5) 8)
+
+;;;; Implement Ackermann's function
+;;; (ack n m) is:
+;;;    (add1 m) if n = 0
+;;;    (ack (sub1 n) 1) if n has add1 at the top and m = 0
+;;;    (ack (sub1 n) (ack n (sub1 m))) if n and m have add1 at the top
+;;; Examples:
+;;;  (ack 0 0) ==> 1
+;;;  (ack 1 0) ==> 2
+;;;  (ack 2 0) ==> 3
+;;;  (ack 3 0) ==> 5
+;;;  (ack 4 0) ==> 13
+;;;  (ack 0 1) ==> 2
+;;;  (ack 1 1) ==> 3
+;;;  (ack 2 1) ==> 5
+;;;  (ack 3 1) ==> 13
+;;;  (ack 0 2) ==> 3
+;;;  (ack 1 2) ==> 4
+;;;  (ack 2 2) ==> 7
+;;;  (ack 3 2) ==> 29
+;;;  (ack 0 3) ==> 4
+;;;  (ack 1 3) ==> 5
+;;;  (ack 2 3) ==> 9
+;;;  (ack 3 3) ==> 61
+
+(claim ack
+  (-> Nat Nat
+    Nat))
+#;(check-same Nat (ack 0 0) 1)
+#;(check-same Nat (ack 1 0) 2)
+#;(check-same Nat (ack 2 0) 3)
+#;(check-same Nat (ack 3 0) 5)
+#;(check-same Nat (ack 4 0) 13)
+#;(check-same Nat (ack 0 1) 2)
+#;(check-same Nat (ack 1 1) 3)
+#;(check-same Nat (ack 2 1) 5)
+#;(check-same Nat (ack 3 1) 13)
+#;(check-same Nat (ack 0 2) 3)
+#;(check-same Nat (ack 1 2) 4)
+#;(check-same Nat (ack 2 2) 7)
+#;(check-same Nat (ack 3 2) 29)
+#;(check-same Nat (ack 0 3) 4)
+#;(check-same Nat (ack 1 3) 5)
+#;(check-same Nat (ack 2 3) 9)
+#;(check-same Nat (ack 3 3) 61)
