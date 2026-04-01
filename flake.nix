@@ -1,6 +1,10 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    plfa = {
+      url = "github:plfa/plfa";
+      flake = false;
+    };
   };
 
   outputs =
@@ -25,18 +29,15 @@
             packages = with pkgs; [
               (agda.withPackages (p: with p; [
                 standard-library
-                _1lab
-                cubical
-                generics
-                agdarsec
-                agda2hs-base
-                agda-prelude
-                agda-categories
               ]))
               haskellPackages.agda2hs
+              haskell.compiler.ghc98
               racket
             ];
-            env = { };
+            env = pkgs.buildEnv {
+              name = "agda-plfa-env";
+              paths = [ pkgs.agda ];
+            };
             shellHook = /* bash */ ''
               set -euo pipefail
               export PLTUSERHOME="$PWD/.racket"
