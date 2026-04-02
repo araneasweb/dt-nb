@@ -2,15 +2,23 @@
 
 ;; 1. Define "one" to mean 1
 (claim one
-  Nat)
+       Nat)
+
+(define one
+  (add1 zero))
 
 ;; 2. Define "seven" to mean 7
 (claim seven
-  Nat)
+       Nat)
+
+(define seven
+  (add1 (add1 (add1 (add1 (add1 (add1 one)))))))
 
 ;; 3. Define a pair whose car is one and whose cdr is seven
 (claim one-and-seven
-  (Pair Nat Nat))
+       (Pair Nat Nat))
+
+(define one-and-seven (cons one seven))
 
 
 ;; These definitions are not a problem for you to fill out, but rather
@@ -31,37 +39,42 @@
 ;; 4. Find an expression with this type and complete the definition.
 ;;    Write it using add1 and zero.
 (claim a-natural-number
-  (car Nat-and-Atom))
+       (car Nat-and-Atom))
 
+(define a-natural-number zero)
 
 ;; 5. Complete this definition.
 (claim veggies
-  (Pair (car Atom-and-Nat) (cdr Nat-and-Atom)))
+       (Pair (car Atom-and-Nat) (cdr Nat-and-Atom)))
+
+(define veggies (cons 'a 'b))
 
 
 ;; 6. Complete this definition. car-of-Nats should find the first
 ;;    Nat in a pair of Nats.
 (claim car-of-Nats
-  (-> (Pair Nat Nat)
-    Nat))
+       (-> (Pair Nat Nat)
+           Nat))
+
+(define car-of-Nats (λ (x) (car x)))
 
 ;; Please uncomment this test prior to submission.
-#;
 (check-same Nat
-  (car-of-Nats (cons 1 2))
-  1)
+            (car-of-Nats (cons 1 2))
+            1)
 
 ;; 7. Complete this definition. cdr-of-Atoms should find the second
 ;;    Atom in a pair of Atoms.
 (claim cdr-of-Atoms
-  (-> (Pair Atom Atom)
-    Atom))
+       (-> (Pair Atom Atom)
+           Atom))
+
+(define cdr-of-Atoms (λ (x) (cdr x)))
 
 ;; Please uncomment this test prior to submission.
-#;
 (check-same Atom
-  (cdr-of-Atoms (cons 'celery 'parsnip))
-  'parsnip)
+            (cdr-of-Atoms (cons 'celery 'parsnip))
+            'parsnip)
 
 ;; 8. Complete this definition.
 ;;      (third-of-four-Nat (cons w (cons x (cons y z))))
@@ -69,14 +82,15 @@
 ;;      y,
 ;;    no matter which Nats w, x, y, and z are.
 (claim third-of-four-Nat
-  (-> (Pair Nat (Pair Nat (Pair Nat Nat)))
-    Nat))
+       (-> (Pair Nat (Pair Nat (Pair Nat Nat)))
+           Nat))
+
+(define third-of-four-Nat (λ (x) (car (cdr (cdr x)))))
 
 ;; Please uncomment this test prior to submission.
-#;
 (check-same Nat
-  (third-of-four-Nat (cons 1 (cons 2 (cons 3 4))))
-  3)
+            (third-of-four-Nat (cons 1 (cons 2 (cons 3 4))))
+            3)
 
 
 ;; 9. Complete this definition.
@@ -85,14 +99,16 @@
 ;;      (cons (cons w x) (cons y z))
 ;;    no matter which Nats w, x, y, and z are.
 (claim left-rebalance
-  (-> (Pair Nat (Pair Nat (Pair Nat Nat)))
-    (Pair (Pair Nat Nat) (Pair Nat Nat))))
+       (-> (Pair Nat (Pair Nat (Pair Nat Nat)))
+           (Pair (Pair Nat Nat) (Pair Nat Nat))))
+
+(define left-rebalance
+  (λ (x) (cons (cons (car x) (car (cdr x))) (cdr (cdr x)))))
 
 ;; Please uncomment this test prior to submission
-#;
 (check-same (Pair (Pair Nat Nat) (Pair Nat Nat))
-  (left-rebalance (cons 1 (cons 2 (cons 3 4))))
-  (cons (cons 1 2) (cons 3 4)))
+            (left-rebalance (cons 1 (cons 2 (cons 3 4))))
+            (cons (cons 1 2) (cons 3 4)))
 
 
 ;; 10. Complete this definition.
@@ -100,36 +116,38 @@
 ;;     pair of Nats. The function should be applied to both elements of
 ;;     the pair, in order.
 (claim with-Nats
-  (-> (-> Nat Nat
-        Nat)
-      (Pair Nat Nat)
-    Nat))
+       (-> (-> Nat Nat Nat)
+           (Pair Nat Nat)
+           Nat))
 
+(define with-Nats (λ (f x) (f (car x) (cdr x))))
 
 ;; 11. kar-of-Nats should return the car of a pair of Nats.
 ;;     Write it using with-Nats.
 (claim kar-of-Nats
-  (-> (Pair Nat Nat)
-    Nat))
+       (-> (Pair Nat Nat)
+           Nat))
+
+(define kar-of-Nats (λ (x) (with-Nats (λ (x _) x) x)))
 
 ;; Please uncomment this test prior to submission
-#;
 (check-same Nat
-  (kar-of-Nats (cons 4 2))
-  4)
+            (kar-of-Nats (cons 4 2))
+            4)
 
 
 ;; 12. kdr-of-Nats should return the cdr of a pair of Nats.
 ;;     Write it using with-Nats.
 (claim kdr-of-Nats
-  (-> (Pair Nat Nat)
-    Nat))
+       (-> (Pair Nat Nat)
+           Nat))
+
+(define kdr-of-Nats (λ (x) (with-Nats (λ (_ x) x) x)))
 
 ;; Please uncomment this test prior to submission
-#;
 (check-same Nat
-  (kdr-of-Nats (cons 4 2))
-  2)
+            (kdr-of-Nats (cons 4 2))
+            2)
 
 ;; 13. Write add1p that returns 't if its argument's value has add1 at the
 ;;     top, or 'nil if not.
@@ -137,13 +155,14 @@
 ;;     For example, the value of (add1p 0) should be 'nil, and the value
 ;;     of (add1p 1) and (add1p 12) should be 't.
 (claim add1p
-  (-> Nat
-    Atom))
+       (-> Nat Atom))
+
+(define add1p (λ (x) (which-Nat x 'nil (λ (_) 't))))
 
 ;; Please uncomment these tests prior to submission
-#;(check-same Atom (add1p 0) 'nil)
-#;(check-same Atom (add1p 1) 't)
-#;(check-same Atom (add1p 12) 't)
+(check-same Atom (add1p 0) 'nil)
+(check-same Atom (add1p 1) 't)
+(check-same Atom (add1p 12) 't)
 
 
 ;; 14. Write this using with-Nats. If the car of the pair is zero, the
@@ -157,13 +176,15 @@
 ;; The value of (first-non-zero (cons 5 2)) is 5.
 ;; The value of (first-non-zero (cons 4 0)) is 4.
 (claim first-non-zero
-  (-> (Pair Nat Nat)
-    Nat))
+       (-> (Pair Nat Nat) Nat))
+
+(define first-non-zero
+  (λ (x) (with-Nats (λ (x y) (which-Nat x y (λ (_) x))) x)))
 
 ;; Please uncomment these tests prior to submission
-#;(check-same Nat (first-non-zero (cons 0 0)) 0)
-#;(check-same Nat (first-non-zero (cons 0 2)) 2)
-#;(check-same Nat (first-non-zero (cons 2 5)) 2)
-#;(check-same Nat (first-non-zero (cons 5 2)) 5)
-#;(check-same Nat (first-non-zero (cons 4 0)) 4)
+(check-same Nat (first-non-zero (cons 0 0)) 0)
+(check-same Nat (first-non-zero (cons 0 2)) 2)
+(check-same Nat (first-non-zero (cons 2 5)) 2)
+(check-same Nat (first-non-zero (cons 5 2)) 5)
+(check-same Nat (first-non-zero (cons 4 0)) 4)
 
