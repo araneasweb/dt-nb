@@ -32,6 +32,8 @@
               ]))
               haskellPackages.agda2hs
               haskell.compiler.ghc98
+            ]
+            ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [
               racket
             ];
             env = pkgs.buildEnv {
