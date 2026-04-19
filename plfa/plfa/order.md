@@ -2,7 +2,7 @@
 
 ## P1:
 
-- [Naturals](./part1/Naturals.lagda.md): Natural numbers
+- [Naturals](./part1/Naturals.lagda.md): Natural numbers || DONE
 - [Induction](./part1/Induction.lagda.md): Proof by Induction
 - [Relations](./part1/Relations.lagda.md): Inductive definition of relations
 - [Equality](./part1/Equality.lagda.md): Equality and equational reasoning

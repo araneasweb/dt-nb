@@ -28,7 +28,7 @@ Everyone is familiar with the natural numbers
 and so on. We write `ℕ` for the *type* of natural numbers, and say that
 `0`, `1`, `2`, `3`, and so on are *values* of type `ℕ`, indicated by
 writing `0 : ℕ`, `1 : ℕ`, `2 : ℕ`, `3 : ℕ`, and so on.
-
+ 
 The set of natural numbers is infinite, yet we can write down
 its definition in just a few lines.  Here is the definition
 as a pair of inference rules:
@@ -75,11 +75,11 @@ successor of two; and so on.
 
 ## Exercise `seven` (practice) {#seven}
 
-Write out `7` in longhand. The suggestion below loads but is, of course, incorrect.
+Write out `7` in longhand.
 
 ```agda
 seven : ℕ
-seven = zero
+seven = suc (suc (suc (suc (suc (suc (suc zero))))))
 ```
 
 Type `C-c C-l` in Emacs to instruct Agda to re-load.
@@ -260,7 +260,6 @@ Shortly we will want to write some equations that hold between
 terms involving natural numbers.  To support doing so, we import
 the definition of equality and notations for reasoning
 about it from the Agda standard library:
-
 ```agda
 import Relation.Binary.PropositionalEquality as Eq
 open Eq using (_≡_; refl)
@@ -448,7 +447,23 @@ other word for evidence, which we will use interchangeably, is _proof_.
 Compute `3 + 4`, writing out your reasoning as a chain of equations, using the equations for `+`.
 
 ```agda
--- Your code goes here
+_ : 3 + 4 ≡ 7
+_ =
+  begin
+    3 + 4
+  ≡⟨⟩
+    (suc (suc (suc zero))) + (suc (suc (suc (suc zero))))
+  ≡⟨⟩
+    suc (suc (suc zero)) + (suc (suc (suc (suc zero))))
+  ≡⟨⟩
+    suc (suc (suc zero) + (suc (suc (suc (suc zero)))))
+  ≡⟨⟩
+    suc (suc (suc zero + (suc (suc (suc (suc zero))))))
+  ≡⟨⟩
+    suc (suc (suc (suc (suc (suc (suc zero))))))
+  ≡⟨⟩
+    7
+  ∎
 ```
 
 
@@ -514,7 +529,29 @@ Compute `3 * 4`, writing out your reasoning as a chain of equations, using the e
 (You do not need to step through the evaluation of `+`.)
 
 ```agda
--- Your code goes here
+_ : 3 * 4 ≡ 12
+_ =
+  begin
+    3 * 4
+  ≡⟨⟩
+    (suc 2) * 4
+  ≡⟨⟩
+    4 + (2 * 4)
+  ≡⟨⟩
+    4 + ((suc 1) * 4)
+  ≡⟨⟩
+    4 + (4 + (1 * 4))
+  ≡⟨⟩
+    4 + (4 + (4 + (0 * 4)))
+  ≡⟨⟩
+    4 + (4 + (4 + 0))
+  ≡⟨⟩
+    4 + (4 + 4)
+  ≡⟨⟩
+    4 + 8
+  ≡⟨⟩
+    12
+  ∎
 ```
 
 
@@ -528,7 +565,38 @@ Define exponentiation, which is given by the following equations:
 Check that `3 ^ 4` is `81`.
 
 ```agda
--- Your code goes here
+
+_^_ : ℕ → ℕ → ℕ
+n ^ 0 = 1
+m ^ (suc n) = m * (m ^ n)
+
+
+_ : 3 ^ 4 ≡ 81
+_ =
+  begin
+    3 ^ 4
+  ≡⟨⟩
+    3 ^ (suc 3)
+  ≡⟨⟩
+    3 * (3 ^ 3)
+  ≡⟨⟩
+    3 * (3 ^ (suc 2))
+  ≡⟨⟩
+    3 * (3 * (3 ^ 2))
+  ≡⟨⟩
+    3 * (3 * (3 ^ (suc 1)))
+  ≡⟨⟩
+    3 * (3 * (3 * (3 ^ 1)))
+  ≡⟨⟩
+    3 * (3 * (3 * (3 ^ (suc 0))))
+  ≡⟨⟩
+    3 * (3 * (3 * (3 * (3 ^ 0))))
+  ≡⟨⟩
+    3 * (3 * (3 * (3 * 1)))
+  ≡⟨⟩
+    81
+  ∎
+
 ```
 
 
@@ -616,7 +684,33 @@ Section [Logical Connectives](/Decidable/#logical-connectives).
 Compute `5 ∸ 3` and `3 ∸ 5`, writing out your reasoning as a chain of equations.
 
 ```agda
--- Your code goes here
+_ : 5 ∸ 3 ≡ 2
+_ =
+  begin
+    5 ∸ 3
+  ≡⟨⟩
+    4 ∸ 2
+  ≡⟨⟩
+    3 ∸ 1
+  ≡⟨⟩
+    2 ∸ 0
+  ≡⟨⟩
+    2
+  ∎
+
+_ : 3 ∸ 5 ≡ 0
+_ =
+  begin
+    3 ∸ 5
+  ≡⟨⟩
+    2 ∸ 4
+  ≡⟨⟩
+    1 ∸ 3
+  ≡⟨⟩
+    0 ∸ 2
+  ≡⟨⟩
+    0
+  ∎
 ```
 
 
@@ -973,7 +1067,33 @@ represents a positive natural, and represent zero by `⟨⟩ O`.
 Confirm that these both give the correct answer for zero through four.
 
 ```agda
--- Your code goes here
+inc : Bin → Bin
+inc ⟨⟩ = ⟨⟩ O
+inc (⟨⟩ O) = ⟨⟩ I
+inc (⟨⟩ I) = ⟨⟩ I O
+inc (x O) = x I
+inc (x I) = (inc x) O
+
+_ : inc (⟨⟩ I O I I) ≡ ⟨⟩ I I O O
+_ = refl
+
+to : ℕ → Bin
+to zero = ⟨⟩ O
+to (suc n) = inc (to n)
+
+_ : to 12 ≡ ⟨⟩ I I O O
+_ = refl
+
+from : Bin → ℕ
+from ⟨⟩ = 0
+from (⟨⟩ O) = 0
+from (⟨⟩ I) = 1
+from (x O) = 2 * (from x)
+from (x I) = 1 + 2 * (from x)
+
+_ : from (⟨⟩ I I O O) ≡ 12
+_ = refl
+
 ```
 
 
